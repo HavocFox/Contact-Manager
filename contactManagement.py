@@ -72,6 +72,18 @@ def contact_display():
 
 #--------------------------------------------------------
 
+def contact_search():
+    print("Please enter the identifier of the contact you're searching for. ")
+    search_term = input("This would be a phone number or email address. ")
+
+    for contact, info in contacts.items():
+        if search_term in contact:
+            print("Found! ")
+            print("The contact that was found: ")
+            print(f'Identifier (Phone or Email): {contact} Name: {info['Name']} Email: {info['Email']} Phone #: {info['Phone']}\n')
+
+#--------------------------------------------------------
+
 def contact_export():
     print("Exporting contacts...")
     with open('contacts_exported.txt', 'w') as file:
@@ -80,7 +92,7 @@ def contact_export():
 
             if ovchoice == 'Y' or not ovchoice:
                 for contact, info in contacts.items():
-                    file.write(f'Identifier (Phone or Email): {contact} Name: {info['Name']} Email: {info['Email']} Phone #:  {info['Phone']}\n')
+                    file.write(f'Identifier (Phone or Email): {contact} Name: {info['Name']} Email: {info['Email']} Phone #: {info['Phone']}\n')
                 print("success")
             else:
                 ("Returning to menu. \n")
@@ -134,6 +146,7 @@ while True:
 
     if user_choice == 4:
         print("You have chosen to search for a contact. ")
+        contact_search()
 
     if user_choice == 5:
         print("You have chosen to view your contacts. ")
