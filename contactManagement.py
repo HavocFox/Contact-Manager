@@ -55,10 +55,15 @@ def contact_add():
 
 #--------------------------------------------------------
 
+def contact_delete():
+    return
+
+#--------------------------------------------------------
+
 def contact_display():
     print("\nYour contacts: ")
     for contact, info in contacts.items():
-        print(f'Identifier (Phone or Email): {contact} Name: {info['Name']} Email: {info['Email']} Phone #:  {info['Phone']}\n')
+        print(f'Identifier: {contact} Name: {info['Name']} Email: {info['Email']} Phone #:  {info['Phone']}\n')
 
 #--------------------------------------------------------
 
@@ -68,7 +73,7 @@ def contact_edit():
     for contact, info in contacts.items():
         if search_term in contact:
             print("This is the contact you are editing: ")
-            print(f'Identifier (Phone): {contact} Name: {info['Name']} Email: {info['Email']} Phone #: {info['Phone']}\n')
+            print(f'Identifier: {contact} Name: {info['Name']} Email: {info['Email']} Phone #: {info['Phone']}\n')
 
     edit_choice = input("What part of the contact would you like to edit? Name, Email or Phone? ").lower()
     if edit_choice == 'name':
@@ -126,27 +131,39 @@ def contact_export():
 
             if ovchoice == 'Y' or not ovchoice:
                 for contact, info in contacts.items():
-                    file.write(f'Identifier): {contact} Name: {info['Name']} Email: {info['Email']} Phone #: {info['Phone']}\n')
-                print("success")
+                    file.write(f'Identifier: {contact} Name: {info['Name']} Email: {info['Email']} Phone #: {info['Phone']}\n')
+                print("Successfully exported contacts to 'exported_contacts.txt'.")
             else:
                 ("Returning to menu. \n")
             
     file.close()
 
 #--------------------------------------------------------
-
 def contact_import():
-    
+
+    contacts.clear()
+    dupe = False
     while True:
         try:
             file_to_open = input("What is the name of the file you are importing contacts from? ")      # Might need error handling for weird characters entered
             with open(file_to_open, 'r') as file:
                 for line in file:
-                    info = line.strip().split(',')  # Split the line into contact info
-                    phone = info[0]
-                    name = info[1]
-                    email = info[2]
-                    contacts[phone] = {'Name': name, 'Email': email, 'Phone': phone}  # Add contact to dictionary
+                    dupe = False
+                    info_strip = line.strip().split(' ')  # Split the line into contact info
+                    phone_strip = info_strip[1]
+                    name = info_strip[3]+" " + info_strip[4]
+                    email_strip = info_strip[6]
+                    for contact, infor in contacts.items():
+                        if phone_strip in infor['Phone']:
+                            print("Contact detected as duplicate and skipped. ")
+                            dupe = True
+                    for contact, infor in contacts.items():
+                        if email_strip in infor['Phone']:
+                            print("Contact detected as duplicate and skipped. ")
+                            dupe = True
+                            return
+                    if dupe == False:
+                        contacts[phone_strip] = {'Name': name, 'Email': email_strip, 'Phone': phone_strip}  # Add contact to dictionary
                     
         except FileNotFoundError:
             print("That file does not exist! ")
@@ -155,6 +172,9 @@ def contact_import():
             break
 
     print("Contacts imported successfully. \n")
+
+
+
 
 
 
@@ -187,6 +207,7 @@ while True:
             print("There's nothing in your contacts.")
         else:
             print("You have chosen to delete a contact. ")
+            contact_delete()
 
     if user_choice == 4:
         if len(contacts) == 0:
@@ -211,7 +232,12 @@ while True:
 
     if user_choice == 7:
         print("You have chosen to import contacts from a text file. ")
-        contact_import()
+        if contacts:
+            importch = input("There are already contacts in your list. This will overwrite them. Proceed? Y or N. ").upper()
+            if importch == 'Y':
+                contact_import()
+        else:
+            contact_import()
 
     if user_choice == 8:
         print("Thank you for using the Contact Management System.\n ")
