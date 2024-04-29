@@ -3,10 +3,7 @@
 
 import re
 contacts = {
-    '1234567890': {'Name': 'Mathew McConaughey', 'Email': 'crungus@gmail.com', 'Phone': '1234567890'},
-    '2234567890': {'Name': '1Mathew McConaughey', 'Email': '1crungus@gmail.com', 'Phone': '2234567890'},
-    '3234567890': {'Name': '2Mathew McConaughey', 'Email': '2crungus@gmail.com', 'Phone': '3234567890'},
-    '4234567890': {'Name': '3Mathew McConaughey', 'Email': '3crungus@gmail.com', 'Phone': '4234567890'},
+    '1234567890': {'Name': 'Mathew McConaughey', 'Email': 'testing@gmail.com', 'Phone': '1234567890'},
 }
 
 
@@ -104,7 +101,12 @@ def contact_display():
 #--------------------------------------------------------
 # Function to edit part of a contact
 def contact_edit():
-    search_term = input("Which contact do you want to edit? Please enter its identifier. ")         # Prompts for the phone that identifies the contact
+    while True:
+        search_term = input("Which contact do you want to edit? Please enter its identifier. ")         # Prompts for the phone that identifies the contact
+        if search_term.isdigit() and len(search_term) == 10:
+            break
+        else:
+            print("Please enter a valid identifier. ")
 
     for contact, info in contacts.items():
         if search_term in contact:                                                                  # Searches for contact that user wanted and shows it for clarity
@@ -286,5 +288,5 @@ while True:
         print("Thank you for using the Contact Management System.\n ")
         break
 
-    else:
+    if user_choice < 1 or user_choice > 8:
         print("Please enter a valid choice. ")
